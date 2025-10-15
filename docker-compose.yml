@@ -1,0 +1,17 @@
+services:
+  postgres:
+    container_name: shard-db
+
+    image: postgres
+
+    ports:
+      - ${SHARD_DATABASE_PORT:-5432}:5432
+
+    environment:
+      POSTGRES_USER: ${SHARD_DATABASE_USER}
+      POSTGRES_PASSWORD: ${SHARD_DATABASE_PASSWORD}
+      POSTGRES_DB: ${SHARD_DATABASE_NAME}
+      PGDATA: /data/postgres
+
+    volumes:
+      - ./data/pg:/data/postgres

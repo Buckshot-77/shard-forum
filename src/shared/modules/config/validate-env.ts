@@ -14,6 +14,8 @@ export const validateEnv = () => {
     application: {
       port: process.env.PORT,
       jwtSecret: process.env.JWT_SECRET,
+      jwtPrivateKey: process.env.JWT_PRIVATE_KEY,
+      jwtPublicKey: process.env.JWT_PUBLIC_KEY,
     },
   }
 

@@ -8,8 +8,13 @@ import { AppConfigService } from 'src/shared/modules/config/config.service'
     PassportModule,
     JwtModule.registerAsync({
       inject: [AppConfigService],
+      global: true,
       useFactory(config: AppConfigService) {
-        return { secret: config.applicationConfig.jwtSecret }
+        return {
+          privateKey: Buffer.from(config.jwtPrivateKey, 'base64'),
+          publicKey: Buffer.from(config.jwtPublicKey, 'base64'),
+          signOptions: { algorithm: 'RS256' },
+        }
       },
     }),
   ],

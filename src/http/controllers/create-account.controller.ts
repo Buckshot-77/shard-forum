@@ -16,8 +16,8 @@ import { ZodValidationPipe } from 'src/http/pipes/zod-validation-pipe'
 
 const createAccountBodySchema = z.object({
   name: z.string(),
-  email: z.email(),
-  password: z.string().min(8),
+  email: z.email().max(128),
+  password: z.string().min(8).max(128),
 })
 
 type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>

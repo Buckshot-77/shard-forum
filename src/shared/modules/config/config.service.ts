@@ -52,9 +52,6 @@ export class AppConfigService {
   get applicationConfig() {
     return {
       port: this.configService.get('application.port', { infer: true }),
-      jwtSecret: this.configService.get('application.jwtSecret', {
-        infer: true,
-      }),
       jwtPrivateKey: this.configService.get('application.jwtPrivateKey', {
         infer: true,
       }),

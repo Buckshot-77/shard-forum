@@ -12,7 +12,6 @@ export const envSchema = z.object({
 
   application: z.object({
     port: z.coerce.number(),
-    jwtSecret: z.string(),
     jwtPrivateKey: z.string(),
     jwtPublicKey: z.string(),
   }),

@@ -6,6 +6,7 @@ import { AppConfigModule } from './shared/modules/config/config.module'
 import { AuthModule } from './http/auth/auth.module'
 import { AuthenticateController } from './http/controllers/authenticate.controller'
 import { CreateQuestionController } from './http/controllers/create-question.controller'
+import { FetchRecentQuestionsController } from './http/controllers/fetch-recent-questions.controller'
 
 @Module({
   imports: [AppConfigModule, AuthModule],
@@ -13,6 +14,7 @@ import { CreateQuestionController } from './http/controllers/create-question.con
     CreateAccountController,
     AuthenticateController,
     CreateQuestionController,
+    FetchRecentQuestionsController,
   ],
   providers: [PrismaService],
 })

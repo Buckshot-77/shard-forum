@@ -26,6 +26,10 @@ describe('Create Account (E2E)', () => {
     await app.init()
   })
 
+  afterAll(async () => {
+    await prisma.user.deleteMany({})
+  })
+
   test('[POST] /accounts', async () => {
     const response = await request(app.getHttpServer()).post('/accounts').send({
       name: 'John Doe',

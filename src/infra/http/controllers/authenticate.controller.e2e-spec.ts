@@ -5,7 +5,7 @@ import { Test } from '@nestjs/testing'
 import request from 'supertest'
 import argon2 from 'argon2'
 
-import { AppModule } from '@/app.module'
+import { AppModule } from '@/infra/app.module'
 import { PrismaService } from '@/persistence/prisma/prisma.service'
 
 describe('Authenticate (E2E)', () => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { AppModule } from '@/app.module'
+import { AppModule } from '@/infra/app.module'
 
 import { PrismaService } from '@/persistence/prisma/prisma.service'
 

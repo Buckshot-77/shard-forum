@@ -9,7 +9,7 @@ import { Test } from '@nestjs/testing'
 import argon2 from 'argon2'
 import request from 'supertest'
 
-import { AppModule } from '@/app.module'
+import { AppModule } from '@/infra/app.module'
 
 describe('Create Account (E2E)', () => {
   let app: INestApplication

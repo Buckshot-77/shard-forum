@@ -6,7 +6,7 @@ import request from 'supertest'
 import argon2 from 'argon2'
 
 import { AppModule } from '@/infra/app.module'
-import { PrismaService } from '@/persistence/prisma/prisma.service'
+import { PrismaService } from '@/infra/persistence/prisma/prisma.service'
 
 describe('Authenticate (E2E)', () => {
   let app: INestApplication

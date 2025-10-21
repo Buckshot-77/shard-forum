@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
 import { CurrentUser } from '../../auth/current-user.decorator'
 import type { UserPayload } from '../../auth/jwt.strategy'
-import { PrismaService } from 'src/persistence/prisma/prisma.service'
+import { PrismaService } from '@/infra/persistence/prisma/prisma.service'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 import { randomUUID } from 'node:crypto'
 

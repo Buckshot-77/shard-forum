@@ -11,7 +11,7 @@ import argon2 from 'argon2'
 
 import { z } from 'zod'
 
-import { PrismaService } from 'src/persistence/prisma/prisma.service'
+import { PrismaService } from '@/infra/persistence/prisma/prisma.service'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
 const createAccountBodySchema = z.object({

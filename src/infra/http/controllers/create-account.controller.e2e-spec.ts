@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { AppModule } from '@/infra/app.module'
 
-import { PrismaService } from '@/persistence/prisma/prisma.service'
+import { PrismaService } from '@/infra/persistence/prisma/prisma.service'
 
 import { INestApplication } from '@nestjs/common'
 

@@ -8,13 +8,13 @@ import { QuestionBestAnswerChosenEvent } from '@/domain/forum/enterprise/events/
 
 export interface QuestionProps {
   authorId: UniqueEntityID
-  bestAnswerId?: UniqueEntityID
+  bestAnswerId: UniqueEntityID | null
   title: string
   content: string
   slug: Slug
   attachments: QuestionAttachmentList
   createdAt: Date
-  updatedAt?: Date
+  updatedAt: Date | null
 }
 
 export class Question extends AggregateRoot<QuestionProps> {
@@ -51,6 +51,7 @@ export class Question extends AggregateRoot<QuestionProps> {
   }
 
   get isNew(): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     return dayjs().diff(this.createdAt, 'days') <= 3
   }
 
@@ -79,16 +80,18 @@ export class Question extends AggregateRoot<QuestionProps> {
     this.touch()
   }
 
-  set bestAnswerId(bestAnswerId: UniqueEntityID | undefined) {
+  set bestAnswerId(bestAnswerId: UniqueEntityID | null) {
     if (bestAnswerId === undefined) {
       return
     }
 
     if (
-      this.props.bestAnswerId === undefined ||
-      !bestAnswerId.equals(this.props.bestAnswerId)
+      this.props.bestAnswerId === null ||
+      !bestAnswerId!.equals(this.props.bestAnswerId)
     ) {
-      this.addDomainEvent(new QuestionBestAnswerChosenEvent(this, bestAnswerId))
+      this.addDomainEvent(
+        new QuestionBestAnswerChosenEvent(this, bestAnswerId as UniqueEntityID),
+      )
     }
 
     this.props.bestAnswerId = bestAnswerId
@@ -106,6 +109,8 @@ export class Question extends AggregateRoot<QuestionProps> {
         slug: props.slug ?? Slug.createFromText(props.title),
         attachments: props.attachments ?? new QuestionAttachmentList(),
         createdAt: props.createdAt ?? new Date(),
+        updatedAt: props.updatedAt ?? null,
+        bestAnswerId: props.bestAnswerId ?? null,
       },
       id,
     )

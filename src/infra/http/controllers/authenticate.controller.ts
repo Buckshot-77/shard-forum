@@ -11,7 +11,7 @@ import { z } from 'zod'
 import argon2 from 'argon2'
 
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
-import { PrismaService } from 'src/persistence/prisma/prisma.service'
+import { PrismaService } from '@/infra/persistence/prisma/prisma.service'
 
 const authenticateBodySchema = z.object({
   email: z.email().max(128),

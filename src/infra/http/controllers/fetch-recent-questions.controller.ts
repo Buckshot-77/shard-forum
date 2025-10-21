@@ -2,7 +2,7 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common'
 import { z } from 'zod'
 
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
-import { PrismaService } from 'src/persistence/prisma/prisma.service'
+import { PrismaService } from '@/infra/persistence/prisma/prisma.service'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 
 const pageQueryParamsSchema = z.coerce.number().min(1).optional().default(1)

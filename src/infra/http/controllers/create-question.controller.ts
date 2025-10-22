@@ -1,12 +1,17 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  InternalServerErrorException,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
 import { z } from 'zod'
 
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard'
 import { CurrentUser } from '../../auth/current-user.decorator'
 import type { UserPayload } from '../../auth/jwt.strategy'
-import { PrismaService } from '@/infra/persistence/prisma/prisma.service'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
-import { randomUUID } from 'node:crypto'
+import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question'
 
 const createQuestionBodySchema = z.object({
   title: z.string(),
@@ -17,7 +22,7 @@ type CreateQuestionBody = z.infer<typeof createQuestionBodySchema>
 
 @Controller('/questions')
 export class CreateQuestionController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly createQuestion: CreateQuestionUseCase) {}
   @Post()
   @UseGuards(JwtAuthGuard)
   async handle(
@@ -26,54 +31,24 @@ export class CreateQuestionController {
     body: CreateQuestionBody,
   ) {
     const { title, content } = body
-    const id = randomUUID()
-    let slug: string
 
-    slug = this.titleToSlug(title)
+    const userId = user.sub
 
-    const foundQuestionBySlug = await this.prisma.question.findUnique({
-      where: { slug },
+    const result = await this.createQuestion.execute({
+      title,
+      content,
+      authorId: userId,
+      attachmentsIds: [],
     })
 
-    if (foundQuestionBySlug) {
-      const randomStringAuxiliary = randomUUID().split('-')[0]
-
-      slug += randomStringAuxiliary
+    if (result.isLeft()) {
+      throw new InternalServerErrorException(
+        'There was an error creating the question',
+      )
     }
 
-    await this.prisma.question.create({
-      data: {
-        id,
-        title,
-        content,
-        authorId: user.sub,
-        slug,
-      },
-    })
+    const id = result.value.question.id.toValue()
 
     return { id }
-  }
-
-  private titleToSlug(title: string): string {
-    const slug = title
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, '') // Remove non-alphanumeric characters
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-
-    if (slug.length <= 72) return slug
-
-    const words = slug.split('-')
-    let truncatedSlug = ''
-
-    for (const word of words) {
-      if ((truncatedSlug + (truncatedSlug ? '-' : '') + word).length > 72) break
-      truncatedSlug += (truncatedSlug ? '-' : '') + word
-    }
-
-    return truncatedSlug
   }
 }

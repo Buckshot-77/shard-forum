@@ -5,6 +5,7 @@ import { Answer } from '@/domain/forum/enterprise/entities/answer'
 interface FetchQuestionAnswersUseCaseRequest {
   questionId: string
   page: number
+  pageSize?: number
 }
 
 type FetchQuestionAnswersUseCaseResponse = Either<
@@ -20,10 +21,11 @@ export class FetchQuestionAnswersUseCase {
   async execute({
     questionId,
     page,
+    pageSize,
   }: FetchQuestionAnswersUseCaseRequest): Promise<FetchQuestionAnswersUseCaseResponse> {
     const answers = await this.answersRepository.findManyByQuestionId(
       questionId,
-      { page },
+      { page, pageSize: pageSize ?? 20 },
     )
 
     return right({

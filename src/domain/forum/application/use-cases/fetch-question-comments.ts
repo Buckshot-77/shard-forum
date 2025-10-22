@@ -5,6 +5,7 @@ import { Either, right } from '@/core/either'
 interface FetchQuestionCommentsUseCaseRequest {
   questionId: string
   page: number
+  pageSize?: number
 }
 
 type FetchQuestionCommentsUseCaseResponse = Either<
@@ -20,10 +21,12 @@ export class FetchQuestionCommentsUseCase {
   async execute({
     questionId,
     page,
+    pageSize,
   }: FetchQuestionCommentsUseCaseRequest): Promise<FetchQuestionCommentsUseCaseResponse> {
     const questionComments =
       await this.questionCommentsRepository.findManyByQuestionId(questionId, {
         page,
+        pageSize: pageSize ?? 20,
       })
 
     return right({

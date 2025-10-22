@@ -53,7 +53,7 @@ describe('Create Account (E2E)', () => {
         content: 'this is my content',
       })
     expect(response.statusCode).toBe(201)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     expect(response.body).toEqual({ id: expect.any(String) })
     const questionOnDatabase = await prisma.question.findFirst({
       where: {

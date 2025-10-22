@@ -4,6 +4,7 @@ import { Either, right } from '@/core/either'
 
 interface FetchRecentQuestionsUseCaseRequest {
   page: number
+  pageSize?: number
 }
 
 type FetchRecentQuestionsUseCaseResponse = Either<
@@ -18,8 +19,12 @@ export class FetchRecentQuestionsUseCase {
 
   async execute({
     page,
+    pageSize,
   }: FetchRecentQuestionsUseCaseRequest): Promise<FetchRecentQuestionsUseCaseResponse> {
-    const questions = await this.questionsRepository.findManyRecent({ page })
+    const questions = await this.questionsRepository.findManyRecent({
+      page,
+      pageSize: pageSize ?? 20,
+    })
 
     return right({
       questions,

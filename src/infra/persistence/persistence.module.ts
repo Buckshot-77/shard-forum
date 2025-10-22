@@ -1,27 +1,37 @@
-import { Module } from '@nestjs/common'
+import { Module, Provider } from '@nestjs/common'
 import { PrismaService } from './prisma/prisma.service'
 import { PrismaAnswersRepository } from './prisma/repositories/prisma-answers-repository'
 import { PrismaAnswerAttachmentsRepository } from './prisma/repositories/prisma-answer-attachments-repository'
 import { PrismaQuestionAttachmentsRepository } from './prisma/repositories/prisma-question-attachments-repository'
 import { PrismaQuestionCommentsRepository } from './prisma/repositories/prisma-question-comments-repository'
 import { PrismaQuestionsRepository } from './prisma/repositories/prisma-questions-repository'
+import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository'
+
+const simultaniouslyImportedAndExportedServices: Provider[] = [
+  {
+    provide: 'AnswersRepository',
+    useClass: PrismaAnswersRepository,
+  },
+  {
+    provide: 'AnswerAttachmentsRepository',
+    useClass: PrismaAnswerAttachmentsRepository,
+  },
+  {
+    provide: 'QuestionAttachmentsRepository',
+    useClass: PrismaQuestionAttachmentsRepository,
+  },
+  {
+    provide: 'QuestionCommentsRepository',
+    useClass: PrismaQuestionCommentsRepository,
+  },
+  {
+    provide: QuestionsRepository,
+    useClass: PrismaQuestionsRepository,
+  },
+]
 
 @Module({
-  providers: [
-    PrismaService,
-    PrismaAnswersRepository,
-    PrismaAnswerAttachmentsRepository,
-    PrismaQuestionAttachmentsRepository,
-    PrismaQuestionCommentsRepository,
-    PrismaQuestionsRepository,
-  ],
-  exports: [
-    PrismaService,
-    PrismaAnswersRepository,
-    PrismaAnswerAttachmentsRepository,
-    PrismaQuestionAttachmentsRepository,
-    PrismaQuestionCommentsRepository,
-    PrismaQuestionsRepository,
-  ],
+  providers: [PrismaService, ...simultaniouslyImportedAndExportedServices],
+  exports: [PrismaService, ...simultaniouslyImportedAndExportedServices],
 })
 export class PersistenceModule {}

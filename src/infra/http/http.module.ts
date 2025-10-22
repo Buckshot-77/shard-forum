@@ -4,6 +4,7 @@ import { AuthenticateController } from './controllers/authenticate.controller'
 import { CreateQuestionController } from './controllers/create-question.controller'
 import { FetchRecentQuestionsController } from './controllers/fetch-recent-questions.controller'
 import { PersistenceModule } from '../persistence/persistence.module'
+import { CreateQuestionUseCase } from '@/domain/forum/application/use-cases/create-question'
 
 @Module({
   controllers: [
@@ -12,6 +13,7 @@ import { PersistenceModule } from '../persistence/persistence.module'
     CreateQuestionController,
     FetchRecentQuestionsController,
   ],
+  providers: [CreateQuestionUseCase],
   imports: [PersistenceModule],
 })
 export class HttpModule {}

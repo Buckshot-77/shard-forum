@@ -1,25 +1,30 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `created_at` on the `users` table. All the data in the column will be lost.
-  - You are about to drop the column `password_hash` on the `users` table. All the data in the column will be lost.
-  - You are about to drop the column `updated_at` on the `users` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[best_answer_id]` on the table `questions` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `password` to the `users` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('STUDENT', 'INSTRUCTOR');
 
--- AlterTable
-ALTER TABLE "questions" ADD COLUMN     "best_answer_id" TEXT;
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password_hash" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'STUDENT',
 
--- AlterTable
-ALTER TABLE "users" DROP COLUMN "created_at",
-DROP COLUMN "password_hash",
-DROP COLUMN "updated_at",
-ADD COLUMN     "password" TEXT NOT NULL,
-ADD COLUMN     "role" "UserRole" NOT NULL DEFAULT 'STUDENT';
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "questions" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "author_id" TEXT NOT NULL,
+    "best_answer_id" TEXT,
+
+    CONSTRAINT "questions_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "answers" (
@@ -34,7 +39,16 @@ CREATE TABLE "answers" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "questions_slug_key" ON "questions"("slug");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "questions_best_answer_id_key" ON "questions"("best_answer_id");
+
+-- AddForeignKey
+ALTER TABLE "questions" ADD CONSTRAINT "questions_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "questions" ADD CONSTRAINT "questions_best_answer_id_fkey" FOREIGN KEY ("best_answer_id") REFERENCES "answers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
